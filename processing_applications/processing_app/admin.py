@@ -5,7 +5,8 @@ from processing_app.models import Application, StatusApplication, Client,Positio
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-     list_display = ('id', 'date_created', 'status','type','client','employee','description')
+    #  list_display = ('id', 'date_created', 'status','type','client','employee','description')
+    pass
 
 
 @admin.register(Client)
