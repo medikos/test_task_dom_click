@@ -156,6 +156,18 @@ def employee_view(request):
                 return Response(status=status.HTTP_201_CREATED)
             else:
                 return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == 'DELETE':
+        data = request.data
+        id_employee =  data.get('id')
+        try:
+            employee_obj = Employee.objects.get(pk=id_employee)
+        except Employee.DoesNotExist:
+            return Response(status = status.HTTP_400_BAD_REQUEST)
+        else:
+            employee_obj.delete()
+            return Response(status=status.HTTP_201_CREATED)
+
+            
 
 @api_view(['GET',])
 def employee_detail_view(request, pk):

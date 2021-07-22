@@ -14,7 +14,7 @@ urlpatterns = [
     path('client/',client_view),
     path('client/<int:pk>/', client_detail_view,),
     path('employee/', employee_view),
-    path('employee/<int:pk>', employee_detail_view)
+    path('employee/<int:pk>/', employee_detail_view)
     
 
 ]

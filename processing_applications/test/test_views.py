@@ -10,8 +10,8 @@ application_view = '/api_app/application/'
 application_detail_view = '/api_app/application/1/'
 client_view = '/api_app/client/'
 client_detail_view = '/api_app/client/1/'
-
-
+employee_view = '/api_app/employee/'
+employee_detail_view = '/api_app/employee/1/'
 
 
 @pytest.fixture
@@ -26,11 +26,6 @@ def create_data_for_all_test():
     )
     return database_dict
 
-    
-    
-
-
-
 
 #test application_view
 
@@ -42,10 +37,6 @@ def test_application_view_method_post(db,create_data_for_all_test):
     res = client.post(application_view, data=application_data, format='json' )
     assert res.status_code == 201
     assert Application.objects.count() == 11
-    
-
-    
-    
 
 def test_application_view_method_get(db, create_data_for_all_test):
     client = APIClient()
@@ -54,7 +45,6 @@ def test_application_view_method_get(db, create_data_for_all_test):
     res = client.get(application_view)
     assert res.status_code == 200
     assert len(res.data) == 10
-   
 
 def test_application_view_method_put(db, create_data_for_all_test):
     client = APIClient()
@@ -73,8 +63,6 @@ def test_application_view_method_delete(db, create_data_for_all_test):
     assert res.status_code == 200
     assert Application.objects.all().count() == 9
 
-    
-
 # test application_detail_view
 
 def test_application_detai_lview_method_get(db, create_data_for_all_test):
@@ -84,10 +72,6 @@ def test_application_detai_lview_method_get(db, create_data_for_all_test):
     res = client.get(application_detail_view)
     assert res.status_code == 200
     assert res.data['id'] ==1
-
-    
-
-    
 
 # test client_view
 
@@ -99,8 +83,6 @@ def test_client_view_method_get(db, create_data_for_all_test):
     assert res.status_code == 200
     assert len(res.data) == 10
 
-    
-
 def test_client_view_method_put(db, create_data_for_all_test):
     client = APIClient()
     data = create_data_for_all_test
@@ -110,16 +92,12 @@ def test_client_view_method_put(db, create_data_for_all_test):
     assert res.status_code == 201
     assert Client.objects.get(pk=1).first_name == 'testuser'
 
-    
-
 def test_client_view_method_delete(db, create_data_for_all_test):
     client = APIClient()
     data = create_data_for_all_test
     create_database_data(data)
     res = client.delete(client_view, data={"id":1}, format='json')
     assert res.status_code == 200
-
-    
 
 # test client_detail_view
 
@@ -131,30 +109,66 @@ def test_client_detail_view_method_get(db, create_data_for_all_test):
     assert res.status_code == 200
     assert res.data['id'] == 1
 
-    
-
 # test employee_view
 
-def test_employee_view_method_get():
-    pass
+def test_employee_view_method_get(db, create_data_for_all_test):
+    client = APIClient()
+    data = create_data_for_all_test
+    create_database_data(data)
+    res = client.get(employee_view)
+    assert res.status_code == 200
+    assert len(res.data) == 10
 
-def test_employee_view_method_put():
-    pass
+def test_employee_view_method_put(db, create_data_for_all_test):
+    client = APIClient()
+    data = create_data_for_all_test
+    create_database_data(data)
+    employee_data = create_employee_put_data()
+    res = client.put(employee_view, data=employee_data, format='json')
+    assert res.status_code == 201
+    assert Employee.objects.get(pk=1).first_name == 'testemployee'
 
-def test_employee_view_method_post():
-    pass
+def test_employee_view_method_post(db, create_data_for_all_test):
+    client = APIClient()
+    data = create_data_for_all_test
+    create_database_data(data)
+    employee_data = create_employee_post_data()
+    res = client.post(employee_view, data=employee_data, format='json')
+    assert res.status_code == 201
+    assert Employee.objects.count() == 11
 
-def test_employee_view_method_delete():
-    pass
-
+def test_employee_view_method_delete(db, create_data_for_all_test):
+    client = APIClient()
+    data = create_data_for_all_test
+    create_database_data(data)
+    res = client.delete(employee_view, data={'id':1}, format='json')
+    assert res.status_code == 201
+    assert Employee.objects.count() == 9
 
 # test employee_detail_view
-def test_employee_detail_view_method_get():
-    pass
-
+def test_employee_detail_view_method_get(db, create_data_for_all_test):
+    client = APIClient()
+    data = create_data_for_all_test
+    create_database_data(data)
+    res = client.get(employee_detail_view)
+    assert res.status_code == 200
+    assert res.data['id'] == 1
 
 
 # auxiliary function
+
+def create_employee_post_data()-> dict:
+    return dict(
+        position={ 'name': 'position 1'},
+        first_name= 'testemployee',
+        last_name= 'test_employee 1',
+    )
+
+def create_employee_put_data() -> dict:
+    data = create_employee_post_data()
+    data['id'] = 1
+    return data
+
 
 def create_client_post_data()-> dict:
     return dict(
@@ -221,11 +235,8 @@ def create_application_in_db(application_data:dict):
     application_data['type'] = type_obj
     application_data['client'] = client_obj
     application_data['employee'] = employee_obj
-
     Application.objects.create(**application_data)
-
     return
-
 
 def create_list_type_aplication() -> list:
     list_type = list() 
