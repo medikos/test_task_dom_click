@@ -6,5 +6,6 @@ class ApplicationtSerializer(serializers.ModelSerializer):
     date_created  =  serializers.DateField(format='%d-%m-%y')
     class Meta:
         model = Application
-        fields = ('id', 'statuses', 'date_created', 'client', 'employee','description')
+        fields = ('id', 'status', 'date_created', 'client', 'employee','description', 'type')
         read_only_fields = ('date_created','id', 'client')
+        

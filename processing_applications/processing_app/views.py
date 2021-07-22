@@ -10,7 +10,9 @@ from processing_app.models import Application
 @api_view(['GET', 'POST', 'PUT'])
 # @renderer_classes((JSONRenderer,))
 def index(request):
-    query_list = Application.objects.all()
+    
+    query_list = Application.objects.filter_params(request.query_params)
+
     serializer = ApplicationtSerializer(query_list, many=True)
     return Response(serializer.data)
     

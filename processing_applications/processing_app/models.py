@@ -1,4 +1,3 @@
-from http import client
 from django.db import models
 
 
@@ -46,13 +45,23 @@ class StatusApplication(models.Model):
     def __str__(self) -> str:
         return self.name
 
+
+
+class ApplicationManager(models.Manager):
+    
+    def filter_params(self, params):
+        pass
+    
+  
+
 class Application(models.Model):
     date_created = models.DateField(auto_now_add=True)
-    statuses = models.ManyToManyField(StatusApplication)
+    status = models.ForeignKey(StatusApplication, on_delete=models.DO_NOTHING)
     type = models.ForeignKey(TypeApplication, on_delete=models.DO_NOTHING)
     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name='applications'                               )
     employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True, related_name='applications' )
     description = models.TextField()
+    objects = ApplicationManager()
 
     def __str__(self) -> str:
         return f'{self.date_created}'
