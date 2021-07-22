@@ -144,14 +144,6 @@ def employee_view(request):
             else:
                 return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-            
-
-
-        
-
-
-
-
 @api_view(['GET',])
 def employee_detail_view(request, pk):
 

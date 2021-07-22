@@ -97,7 +97,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
 class ApplicationtSerializer(serializers.ModelSerializer):
 
-    date_created  =  serializers.DateField(input_formats=['%d-%m-%Y'], format='%d-%m-%Y')
+    date_created  = serializers.DateField(input_formats=['%d-%m-%Y'], format='%d-%m-%Y', required=False)
     client = ClientSerializer(read_only=True)
     employee = EmployeeSerializer(read_only= True)
     status  = StatusSerializer(required=True)
@@ -150,6 +150,7 @@ class ApplicationtSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         status = self._get_status(validated_data['status'])
         type_ = self._get_type(validated_data['type'])
+        client_id = validated_data['client_id']
         client = self._get_client(validated_data['client_id'])
         employee =self._get_employee(validated_data['employee_id'])
         description = validated_data['description']
