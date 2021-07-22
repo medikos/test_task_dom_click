@@ -44,7 +44,7 @@ class StatusApplication(models.Model):
 
 
 class ApplicationManager(models.Manager):
-    
+            
     def _filter_relation_fields(self,value: str, param: str) -> Union[StatusApplication, TypeApplication, QuerySet]:
         dict_model_name = {'type': TypeApplication, 'status': StatusApplication}
         model = dict_model_name[value]

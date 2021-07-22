@@ -1,6 +1,7 @@
 from datetime import date
 from rest_framework import serializers
 from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.exceptions import bad_request
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from rest_framework import status
@@ -10,7 +11,7 @@ from processing_app.models import Application, Client,Employee
 
 
 
-@api_view(['GET', 'POST', 'PUT'])
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
 # @renderer_classes((JSONRenderer,))
 def application_view(request):
 
@@ -27,6 +28,23 @@ def application_view(request):
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.method == 'PUT':
+        data = request.data
+        id_application = data.get('id')
+        try:
+            application_object = Application.objects.get(pk=id_application)
+        except Application.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+         
+        serializer = ApplicationtSerializer(application_object, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+
 
 @api_view(['GET',])
 def application_detail_view(request, pk):
@@ -125,7 +143,7 @@ def employee_view(request):
                 return Response(status=status.HTTP_201_CREATED)
             else:
                 return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-                
+
             
 
 
@@ -135,8 +153,17 @@ def employee_view(request):
 
 
 @api_view(['GET',])
-def employee_detail_view(request):
-    pass
+def employee_detail_view(request, pk):
+
+    try:
+        employee= Employee.objects.get(pk=pk)
+    except Employee.DoesNotExist:
+        return Response(status = status.HTTP_400_BAD_REQUEST)
+    else:
+        serializer = EmployeeSerializer(employee)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
 
 
     
