@@ -7,6 +7,9 @@ from django.contrib.auth.models import User
 
 faker = Faker()
 application_view = '/api_app/application/'
+application_detail_view = '/api_app/application/1/'
+client_view = '/api_app/client/'
+client_detail_view = '/api_app/client/1/'
 
 
 
@@ -62,29 +65,73 @@ def test_application_view_method_put(db, create_data_for_all_test):
     assert res.status_code == 201
     assert Application.objects.get(pk=1).status.name == 'status 1'
 
-def test_application_view_method_delete():
-    pass
+def test_application_view_method_delete(db, create_data_for_all_test):
+    client = APIClient()
+    data = create_data_for_all_test
+    create_database_data(data)
+    res = client.delete(application_view, data={"id":1}, format='json')
+    assert res.status_code == 200
+    assert Application.objects.all().count() == 9
+
+    
 
 # test application_detail_view
 
-def test_application_detai_lview_method_get():
-    pass
+def test_application_detai_lview_method_get(db, create_data_for_all_test):
+    client = APIClient()
+    data = create_data_for_all_test
+    create_database_data(data)
+    res = client.get(application_detail_view)
+    assert res.status_code == 200
+    assert res.data['id'] ==1
+
+    
+
+    
 
 # test client_view
 
-def test_client_view_method_get():
-    pass
+def test_client_view_method_get(db, create_data_for_all_test):
+    client = APIClient()
+    data = create_data_for_all_test
+    create_database_data(data)
+    res = client.get(client_view)
+    assert res.status_code == 200
+    assert len(res.data) == 10
 
-def test_client_view_method_put():
-    pass
+    
 
-def test_client_view_method_delete():
-    pass
+def test_client_view_method_put(db, create_data_for_all_test):
+    client = APIClient()
+    data = create_data_for_all_test
+    create_database_data(data)
+    client_data = create_client_put_data()
+    res = client.put(client_view, data=client_data)
+    assert res.status_code == 201
+    assert Client.objects.get(pk=1).first_name == 'testuser'
+
+    
+
+def test_client_view_method_delete(db, create_data_for_all_test):
+    client = APIClient()
+    data = create_data_for_all_test
+    create_database_data(data)
+    res = client.delete(client_view, data={"id":1}, format='json')
+    assert res.status_code == 200
+
+    
 
 # test client_detail_view
 
-def test_client_detail_view_method_get():
-    pass
+def test_client_detail_view_method_get(db, create_data_for_all_test):
+    client = APIClient()
+    data = create_data_for_all_test
+    create_database_data(data)
+    res = client.get(client_detail_view)
+    assert res.status_code == 200
+    assert res.data['id'] == 1
+
+    
 
 # test employee_view
 
@@ -108,6 +155,19 @@ def test_employee_detail_view_method_get():
 
 
 # auxiliary function
+
+def create_client_post_data()-> dict:
+    return dict(
+
+        first_name='testuser',
+        last_name = 'testuser 1',
+
+    )
+
+def create_client_put_data()->dict:
+    data = create_client_post_data()
+    data['id'] =1
+    return data
 
 def create_appication_post_data() -> dict:
     return dict(

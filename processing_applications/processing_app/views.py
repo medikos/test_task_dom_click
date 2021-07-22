@@ -43,6 +43,19 @@ def application_view(request):
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.method == 'DELETE':
+        data = request.data
+        id = data['id']
+        try:
+            application_obj = Application.objects.get(pk=id)
+        except Application.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            application_obj.delete()
+            return Response(status = status.HTTP_200_OK)
+
+
             
 
 
@@ -91,11 +104,11 @@ def client_view(request):
         else:
             return Response(data=serializer.errors,status = status.HTTP_400_BAD_REQUEST)
     
-    if request.method == 'DELETE':
+    if request.method == "DELETE":
         data = request.data
         id_client  = data['id']
         try:
-            client = Client.objects.get(id_client)
+            client = Client.objects.get(pk =id_client)
         except Client.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         
