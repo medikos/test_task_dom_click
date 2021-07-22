@@ -30,7 +30,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
 
 class ApplicationtSerializer(serializers.ModelSerializer):
-    date_created  =  serializers.DateField(format='%d-%m-%y')
+
+    date_created  =  serializers.DateField(input_formats=['%d-%m-%Y'], format='%d-%m-%Y')
     client = ClientSerializer( read_only=True)
     employee = EmployeeSerializer(label='Hello')
     status  = StatusSerializer()
@@ -38,4 +39,12 @@ class ApplicationtSerializer(serializers.ModelSerializer):
         model = Application
         fields = ('id', 'status', 'date_created','employee','client','description', 'type')
         read_only_fields = ('date_created','id', 'client')
+    
+    def create(self, validated_data):
+        print(self)
+        
+        return {1:'Hello'}
+    
+    
+    
         
