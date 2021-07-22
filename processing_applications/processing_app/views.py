@@ -60,7 +60,11 @@ def client_view(request):
     
     if request.method == 'PUT':
         data = request.data
-        id_client = Client.objects.get(pk=data['id'])
+        try:
+            id_client = Client.objects.get(pk=data['id'])
+        except Client.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
         serializer = ClientSerializer(id_client, data=data)
 
         if serializer.is_valid():
@@ -87,9 +91,9 @@ def client_detail_view(request, pk):
         client_obj = Client.objects.get(pk=pk)
     except Client.DoesNotExist:
         return Response(status= status.HTTP_400_BAD_REQUEST)
-    else:
-        serializer = ClientSerializer(client_obj)
-        return Response(serializer.data)
+    
+    serializer = ClientSerializer(client_obj)
+    return Response(serializer.data)
         
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def employee_view(request):
@@ -106,6 +110,24 @@ def employee_view(request):
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if request.method == 'PUT':
+        data = request.data
+        id_employee = data.get('id')
+        try:
+            employee_obj = Employee.objects.get(pk=id_employee)
+        except Employee.DoesNotExist:
+            Response(status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            serializer = EmployeeSerializer(employee_obj, data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(status=status.HTTP_201_CREATED)
+            else:
+                return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                
+            
+
 
         
 

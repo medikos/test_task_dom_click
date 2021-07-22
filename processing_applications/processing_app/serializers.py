@@ -37,6 +37,10 @@ class EmployeeSerializer(serializers.ModelSerializer):
         fields = ('__all__')
 
 
+    def _get_position(self, position: dict):
+    
+        return Position.objects.get(name = position['name'])
+        
 
     
     def create(self, validated_data: dict):
@@ -46,6 +50,17 @@ class EmployeeSerializer(serializers.ModelSerializer):
         first_name = validated_data['first_name']
         last_name = validated_data['last_name']
         return Employee.objects.create(first_name=first_name, last_name=last_name,position=position_object )
+    
+    def update(self, instance, validated_data):
+        first_name = validated_data.get('first_name')
+        last_name = validated_data.get('last_name')
+        position = validated_data.get('position')
+
+        instance.first_name = first_name  if first_name else instance.first_name
+        instance.last_name = last_name if last_name else instance.last_name
+        instance.position = self._get_position(position) if position else instance.position
+        instance.save()
+        return instance
 
 
 
