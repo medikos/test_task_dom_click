@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from processing_app.models import Application, Client, Employee, Position,StatusApplication
 
@@ -18,12 +19,36 @@ class PositionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Position
         fields = ('name',)
+    
+    def validate_name(self, value):
+        try:
+            Position.objects.get(name=value)
+        except Position.DoesNotExist:
+            raise serializers.ValidationError(f'Position {value} not exist')
+        else:
+            return value
+
 
 class EmployeeSerializer(serializers.ModelSerializer):
     position = PositionSerializer()
+    
     class Meta:
         model = Employee
         fields = ('__all__')
+
+
+
+    
+    def create(self, validated_data: dict):
+        position = validated_data.pop('position')
+        position_name = position['name']
+        position_object = Position.objects.get(name=position_name)
+        first_name = validated_data['first_name']
+        last_name = validated_data['last_name']
+        return Employee.objects.create(first_name=first_name, last_name=last_name,position=position_object )
+
+
+
 
 
 

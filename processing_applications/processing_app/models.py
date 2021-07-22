@@ -24,7 +24,7 @@ class Client(models.Model):
 class Employee(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=200)
-    position = models.OneToOneField(Position, on_delete=models.CASCADE)
+    position = models.ForeignKey(Position, on_delete=models.DO_NOTHING)
 
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"
@@ -44,6 +44,7 @@ class StatusApplication(models.Model):
 
 
 class ApplicationManager(models.Manager):
+    
     def _filter_relation_fields(self,value: str, param: str) -> Union[StatusApplication, TypeApplication, QuerySet]:
         dict_model_name = {'type': TypeApplication, 'status': StatusApplication}
         model = dict_model_name[value]
