@@ -93,7 +93,7 @@ source env/bin/activate
 ```bash
 pip install -r requirements.txt
 ```
-4. Перейдите в каталог test_task_dom_click/ и запустите миграции:
+4. Перейдите в каталог test_task_dom_click/processing_applications/ и запустите миграции:
  ```bash
  python manage.py migrate
  ```
