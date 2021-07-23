@@ -36,11 +36,14 @@ CRM сервис на базе REST  позволяет управлять  сл
     POST PUT DELETE GET	 /api_app/application/ 
     Создание, обновление, удаление и просмотр обьектов заявок базе данных, в случае успеха возвращяется код 201 в при некоректных данных код 400.
     Заявки фильтруются через GET параметры:
+    
     /api_app/application/?status=open
     /api_app/application/?statuses=open-close
     /api_app/application/?type=repair
     /api_app/application/?date_created=28/02/2021
     /api_app/application/?date_created_between=28/02/2021-15/03/2021
+    
+    
     Пример POST данных.
     
         {
@@ -50,8 +53,9 @@ CRM сервис на базе REST  позволяет управлять  сл
             description: 'Починка стиральной машины',
             type: 'ремонт',
         }
+	
     При PUT запросе необходимо добавлять id обьекта в словарь.
-    
+  
     Пример DELETE запроса:
         {
             id:1
