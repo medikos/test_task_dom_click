@@ -40,7 +40,7 @@ def application_view(request):
         serializer = ApplicationtSerializer(application_object, data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_201_CREATED, partial=True)
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -100,7 +100,7 @@ def client_view(request):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(status = status.HTTP_201_CREATED)
+            return Response(status = status.HTTP_201_CREATED, partial=True)
         else:
             return Response(data=serializer.errors,status = status.HTTP_400_BAD_REQUEST)
     
@@ -153,7 +153,7 @@ def employee_view(request):
             serializer = EmployeeSerializer(employee_obj, data=data)
             if serializer.is_valid():
                 serializer.save()
-                return Response(status=status.HTTP_201_CREATED)
+                return Response(status=status.HTTP_201_CREATED, partial=True)
             else:
                 return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     if request.method == 'DELETE':
