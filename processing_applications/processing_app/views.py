@@ -37,10 +37,10 @@ def application_view(request):
         except Application.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
          
-        serializer = ApplicationtSerializer(application_object, data=data)
+        serializer = ApplicationtSerializer(application_object, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_201_CREATED, partial=True)
+            return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
@@ -93,20 +93,20 @@ def client_view(request):
         data = request.data
         try:
             id_client = Client.objects.get(pk=data['id'])
-        except Client.DoesNotExist:
+        except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = ClientSerializer(id_client, data=data)
+        serializer = ClientSerializer(id_client, data=data,partial=True)
 
         if serializer.is_valid():
             serializer.save()
-            return Response(status = status.HTTP_201_CREATED, partial=True)
+            return Response(status = status.HTTP_201_CREATED)
         else:
             return Response(data=serializer.errors,status = status.HTTP_400_BAD_REQUEST)
     
     if request.method == "DELETE":
         data = request.data
-        id_client  = data['id']
+        id_client  = data.get('id')
         try:
             client = Client.objects.get(pk =id_client)
         except Client.DoesNotExist:
@@ -150,10 +150,10 @@ def employee_view(request):
             Response(status=status.HTTP_400_BAD_REQUEST)
 
         else:
-            serializer = EmployeeSerializer(employee_obj, data=data)
+            serializer = EmployeeSerializer(employee_obj, data=data, partial=True)
             if serializer.is_valid():
                 serializer.save()
-                return Response(status=status.HTTP_201_CREATED, partial=True)
+                return Response(status=status.HTTP_201_CREATED)
             else:
                 return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     if request.method == 'DELETE':
